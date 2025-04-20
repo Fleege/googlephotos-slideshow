@@ -10,3 +10,8 @@ To generate the link follow these steps:
 
  - `SLIDESHOW_SOURCE_URL`: The URL to the shared Google Photos Gallery
  - `SLIDESHOW_HTTP_PORT`: Can be used to configure the listening port for the Webserver / Defaults to 80
+ - `SLIDESHOW_LOG_LEVEL`: The log level of the winston logger, defaults to info - Can be one of error , warn, info, verbose, debug, silly
+
+
+### Credits
+This Tool is inspired by the Ideas of this Repo [text](https://github.com/balena-io-experimental/photo-gallery)

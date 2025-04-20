@@ -6,16 +6,10 @@ type typeHttpHandler = (req: Request, res: Response) => void;
 export default class expressHandler {
     static app: Express;
 
-    static registerMethod(method: string, url: string, func: typeHttpHandler, authenticationRequired: boolean = true) {
+    static registerMethod(method: string, url: string, func: typeHttpHandler) {
         if(!['get','post','put','delete'].includes(method)) throw new Error(`Method ${method} is not supported`)
         //@ts-expect-error We use a string to call a method, this is not expected in Typescript
         expressHandler.app[method](url, async (req : Request, res: Response) => {
-            //@ts-expect-error authenticated is no property of default session object
-            if (authenticationRequired && !req.session.authenticated) {
-                res.sendStatus(401);
-                return;
-            }
-    
             try {
                 await func(req, res);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
