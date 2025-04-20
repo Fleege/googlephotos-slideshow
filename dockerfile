@@ -1,4 +1,4 @@
-FROM node as builder
+FROM node AS builder
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -14,7 +14,7 @@ RUN npm run build
 
 FROM node:slim
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 USER node
 
 # Create app directory
