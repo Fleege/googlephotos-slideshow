@@ -11,6 +11,7 @@ To generate the link follow these steps:
  - `SLIDESHOW_SOURCE_URL`: The URL to the shared Google Photos Gallery
  - `SLIDESHOW_HTTP_PORT`: Can be used to configure the listening port for the Webserver / Defaults to 80
  - `SLIDESHOW_LOG_LEVEL`: The log level of the winston logger, defaults to info - Can be one of error , warn, info, verbose, debug, silly
+ - `SLIDESHOW_PATH_PREFIX`: If given this prefix will be added to all Paths you can call (eg. /image-next will then be /myprefix/image-next)
 
 
 ### Credits

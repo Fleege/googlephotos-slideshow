@@ -28,12 +28,13 @@ winston.info(`Starting Express Webserver on Port ${port}`)
 expressHandler.defineExpress(port)
 
 // Handle the index page
-expressHandler.registerMethod('get','/',(_req,res) => {
+let pathPrefix = process.env.SLIDESHOW_PATH_PREFIX?.replace(/^\/+|\/+$/g, '') || "";
+if(pathPrefix)
+    pathPrefix = "/" + pathPrefix
+expressHandler.registerMethod('get',`${pathPrefix}/`,(_req,res) => {
     winston.debug(`Received Request on /`)
     if(photos.hasImages()) {
-        let tosend = "hallo, ich habe folgende Bild-URLs:";
-        photos.photoUrls.forEach(p => tosend += `\r\n${p}`)
-        res.send(tosend)
+        res.send(`Found ${photos.photoUrls.length} Photos`)
     } else {
         res.status(500).send("No images found yet. Maybe the reading is not completed or an error occured. See app log for more information.")
     }
@@ -62,10 +63,10 @@ const proxyWithId = createProxyMiddleware<Request,Response>({
         return `${url.protocol}//${url.host}`
     }
 })
-expressHandler.app.use('/image/:id',proxyWithId)
+expressHandler.app.use(`${pathPrefix}/image/:id`,proxyWithId)
 
-expressHandler.app.use('/image-next',(req,res) => {
-    let redirectTo = `/image/${photos.getNextImageId()}`
+expressHandler.app.use(`${pathPrefix}/image-next`,(req,res) => {
+    let redirectTo = `${pathPrefix}/image/${photos.getNextImageId()}`
     if(req.query.width) {
         redirectTo += `?width=${req.query.width}`
     }

@@ -25,14 +25,16 @@ export default class googlephotos {
             winston.debug(`Now fetching images from google`)
             const googleResponse = await axios.request({method: 'Get',url: this.albumUrl, timeout: this.requestTimeout})
             winston.debug(`Now parsing google response`)
-            this.photoUrls = googleResponse.data
+            const allPhotoUrls = googleResponse.data
                   .match(new RegExp(googlephotos.imageUrlRegex, "g"))
                   .map((m:string) => m.match(googlephotos.imageUrlRegex))
                   .map((p:string) => {
                     // The width and height in the captured url are stored in match 2 (width) and 3 (height), the url itself is 1
                     return `${p[1]}`;
                   });
+            this.photoUrls = [...new Set<string>(allPhotoUrls)] //Some photos may be found multiple times
             winston.info(`Found ${this.photoUrls.length} photos`)
+            winston.silly(`URLs JSON: ${JSON.stringify(this.photoUrls)}`)
 
         //TODO: Any better idea than ignoring eslint here?
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
