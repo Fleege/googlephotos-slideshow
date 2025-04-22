@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import CustomError from './CustomError'
 import { URL } from 'url'
 import winston from 'winston'
@@ -44,6 +44,15 @@ export default class googlephotos {
             } else {
                 winston.error(`ERROR: Fetching images failed with error ${e.code}${e.message?` (${e.message})`:''} - Using known images or empty if none where found yet`)
             }
+        }
+    }
+
+    defineUpdateLoop(loopIntervalSeconds: number) {
+        if(loopIntervalSeconds > 0) {
+            winston.info(`Scheduling Re-Fetching google Images every ${loopIntervalSeconds} seconds`)
+            setInterval(() => this.fetchImages(),loopIntervalSeconds * 1000)
+        } else {
+            winston.info("The loopInterval for fetching Images is 0 or less so regular fetching will be disabled")
         }
     }
 

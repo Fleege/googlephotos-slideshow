@@ -10,7 +10,7 @@ import winston from "winston";
 //Setup logging
 winston.level = process.env.SLIDESHOW_LOG_LEVEL || 'info'
 winston.add(new winston.transports.Console({
-    format: winston.format.printf(info => `${new Date().toISOString()}-${info.level}: ${JSON.stringify(info.message, null, 4)}`)
+    format: winston.format.printf(entry => `${new Date().toISOString()} [${entry.level.padEnd(5)}]: ${entry.message}`)
 }))
 winston.info(`Logging is configured with level ${winston.level}`)
 
@@ -21,6 +21,9 @@ if(url === '') {
 }
 const photos = new googlephotos(url)
 photos.fetchImages()
+let updateLoopInterval : number = parseInt(process.env.SLIDESHOW_UPDATE_INTERVAL_SECONDS || '')
+if(isNaN(updateLoopInterval)) updateLoopInterval = 3600
+photos.defineUpdateLoop(updateLoopInterval)
 
 // Define the Express Handler
 const port : number = parseInt(process.env.SLIDESHOW_HTTP_PORT || '') || 80
